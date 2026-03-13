@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: tfg_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tfg_db
+      POSTGRES_USER: tfg_user
+      POSTGRES_PASSWORD: tfg_password_123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tfg_user -d tfg_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tfg_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tfg_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://tfg_user:tfg_password_123@postgres:5432/tfg_db
+      SECRET_KEY: super-secret-key-change-in-production
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+      REFRESH_TOKEN_EXPIRE_DAYS: "7"
+      DEBUG: "false"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - tfg_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: tfg_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@tfg.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - tfg_network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  tfg_network:
+    driver: bridge
