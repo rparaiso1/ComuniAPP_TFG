@@ -11,7 +11,6 @@ from .incident import Incident, IncidentPriority, IncidentStatus
 from .incident_comment import IncidentComment
 from .document import Document
 from .notification import Notification, NotificationType
-from .device_token import DeviceToken
 from .budget_entry import BudgetEntry
 
 __all__ = [
@@ -33,6 +32,5 @@ __all__ = [
     "Document",
     "Notification",
     "NotificationType",
-    "DeviceToken",
     "BudgetEntry",
 ]

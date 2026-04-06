@@ -1,5 +1,5 @@
 """
-Servicio de notificaciones — crear, broadcast, lectura + push FCM.
+Servicio de notificaciones — crear, broadcast, lectura.
 """
 from sqlalchemy.orm import Session
 from uuid import UUID
@@ -12,29 +12,10 @@ from app.models.user import UserRole
 
 logger = logging.getLogger(__name__)
 
-
 class NotificationService:
 
     def __init__(self, db: Session):
         self.db = db
-
-    def _send_push(self, user_id: UUID, title: str, message: str, link: Optional[str] = None):
-        """Send FCM push notification (best-effort, non-blocking)."""
-        try:
-            from app.services.fcm_service import FCMService
-            data = {"link": link} if link else {}
-            FCMService(self.db).send_to_user(user_id, title, message, data)
-        except Exception as e:
-            logger.warning(f"FCM push failed for user {user_id}: {e}")
-
-    def _send_push_to_users(self, user_ids: list, title: str, message: str, link: Optional[str] = None):
-        """Send FCM push notification to multiple users (best-effort)."""
-        try:
-            from app.services.fcm_service import FCMService
-            data = {"link": link} if link else {}
-            FCMService(self.db).send_to_users(user_ids, title, message, data)
-        except Exception as e:
-            logger.warning(f"FCM push failed for {len(user_ids)} users: {e}")
 
     def create(
         self, user_id: UUID, title: str, message: str,
@@ -48,8 +29,6 @@ class NotificationService:
         self.db.add(notif)
         self.db.flush()
         self.db.commit()
-        # Send FCM push notification
-        self._send_push(user_id, title, message, link)
         return notif
 
     def broadcast(
@@ -71,9 +50,6 @@ class NotificationService:
         self.db.add_all(notifications)
         self.db.flush()
         self.db.commit()
-        # Send FCM push to all org members
-        user_ids = [uo.user_id for uo in user_orgs]
-        self._send_push_to_users(user_ids, title, message, link)
 
     def broadcast_to_leaders(
         self, organization_id: UUID, title: str, message: str,
@@ -99,9 +75,6 @@ class NotificationService:
             self.db.add_all(notifications)
             self.db.flush()
             self.db.commit()
-            # Send FCM push to leaders
-            leader_ids = [n.user_id for n in notifications]
-            self._send_push_to_users(leader_ids, title, message, link)
 
     def get_for_user(self, user_id: UUID, skip: int = 0, limit: int = 20, unread_only: bool = False) -> dict:
         query = self.db.query(Notification).filter(Notification.user_id == user_id)

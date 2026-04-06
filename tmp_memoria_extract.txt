@@ -1,0 +1,300 @@
+PORTADA
+ComuniApp
+Aplicación multiplataforma para la gestión digital de comunidades de vecinos
+Trabajo Final de GradoCiclo Formativo de Grado Superior - Desarrollo de Aplicaciones Multiplataforma
+Alumno: Rubén ParaísoTutor: José Manuel VillarCurso académico: 2025-2026
+Centro educativo: ThePower – Prometeo
+ÍNDICE
+TOC \h \u \z \n \t &quot;Heading 1,1,Heading 2,2,Heading 3,3,Heading 4,4,Heading 5,5,Heading 6,6,&quot;1. ABSTRACT
+2. RESUMEN
+3. OBJETIVOS
+3.1 Objetivo general
+3.2 Objetivos específicos
+4. ANTECEDENTES
+5. ANÁLISIS DEL PROBLEMA
+6. ACTORES DEL SISTEMA
+7. CASOS DE USO
+8. REQUISITOS FUNCIONALES
+9. REQUISITOS NO FUNCIONALES
+10. PROPUESTA DE SOLUCIÓN
+11. ARQUITECTURA DEL SISTEMA
+12. MODELO DE DATOS
+13. MÓDULOS DEL SISTEMA
+14. PLAN DE TRABAJO
+15. DIAGRAMA DE GANTT
+16. PRESUPUESTO
+17. EVOLUCIÓN Y TRABAJO FUTURO
+18. BIBLIOGRAFÍA
+19. TECNOLOGÍAS UTILIZADAS
+20. ANEXOS
+1. ABSTRACT
+Nowadays, many residential communities manage their daily activities through informal methods such as phone calls, emails, messaging applications or physical notice boards. These approaches often lead to information loss, lack of organization and difficulties when tracking incidents or managing shared resources.
+This project presents ComuniApp, a multiplatform application designed to digitalize the management of residential communities and housing complexes. The application centralizes several important processes such as communication between neighbors, reservation of shared areas, incident reporting, document management and notification delivery.
+The system follows a client–server architecture, composed of a backend developed using FastAPI and a database managed with PostgreSQL, while the user interface is developed using Flutter, allowing the application to run on web browsers and mobile devices.
+In addition, the system incorporates a multi-tenant model, enabling a single user to belong to multiple organizations while ensuring data isolation between communities. Role-based access control is also implemented, allowing different permissions depending on whether the user is an administrator, community president or neighbor.
+The result is a centralized platform that improves organization, transparency and communication within residential communities.
+2. RESUMEN
+En muchas comunidades de vecinos y urbanizaciones, la gestión diaria de incidencias, reservas de zonas comunes y comunicaciones entre residentes se realiza mediante medios tradicionales como tablones físicos, llamadas telefónicas o aplicaciones de mensajería.
+Estos métodos presentan numerosos inconvenientes, como la pérdida de información, la falta de seguimiento de las incidencias o los conflictos derivados de la reserva simultánea de recursos comunes.
+El proyecto ComuniApp surge con el objetivo de digitalizar estos procesos mediante una plataforma centralizada que permita gestionar la comunicación, las reservas, las incidencias y la documentación comunitaria desde una única aplicación.
+La aplicación está diseñada para ser accesible desde diferentes dispositivos, incluyendo navegadores web y dispositivos móviles, facilitando así su adopción por parte de los usuarios de la comunidad.
+3. OBJETIVOS
+3.1 Objetivo general
+Desarrollar una aplicación multiplataforma que permita centralizar la gestión digital de comunidades de vecinos y urbanizaciones, facilitando la administración de recursos comunes, la comunicación interna, el seguimiento de incidencias y el acceso a información relevante mediante una plataforma accesible, estructurada y segura.
+3.2 Objetivos específicos
+Los objetivos específicos del proyecto son los siguientes:
+Implementar un sistema multi-comunidad (multi-tenant) que permita que un mismo usuario pueda pertenecer a varias organizaciones, operando en todo momento dentro del contexto de la organización activa.
+Desarrollar un sistema de control de acceso basado en roles que diferencie claramente los permisos de administración, presidencia y vecindario.
+Digitalizar la gestión de reservas de zonas comunes, permitiendo registrar solicitudes, controlar disponibilidad y gestionar aprobaciones o cancelaciones cuando proceda.
+Implementar un módulo de incidencias que permita registrar problemas, realizar su seguimiento, añadir comentarios y actualizar su estado.
+Desarrollar un módulo de gestión documental que facilite la subida, consulta y control de visibilidad de documentos relacionados con la comunidad.
+Incorporar un tablón de anuncios para la publicación de comunicaciones internas y la interacción entre usuarios mediante comentarios o reacciones.
+Implementar un sistema de notificaciones internas que informe a los usuarios sobre eventos relevantes dentro de la plataforma.
+Integrar un calendario comunitario que permita consultar eventos, actividades y fechas relevantes.
+Desarrollar un módulo de presupuesto y gastos, orientado al registro y consulta de movimientos económicos de la comunidad.
+Facilitar tareas de administración mediante funciones de importación y exportación de datos.
+Construir una base técnica sólida mediante una arquitectura cliente-servidor con separación clara entre interfaz, lógica de negocio y persistencia de datos.
+Mejorar la trazabilidad y la transparencia de la gestión comunitaria, dejando constancia de acciones, estados y operaciones realizadas dentro del sistema.
+4. ANTECEDENTES
+La transformación digital ha afectado progresivamente a numerosos ámbitos de la vida cotidiana, incluida la gestión de espacios residenciales compartidos. A pesar de ello, muchas comunidades de propietarios continúan utilizando procedimientos manuales o herramientas no especializadas para organizar su funcionamiento interno. Esta realidad provoca que actividades frecuentes, como comunicar incidencias, coordinar el uso de zonas comunes o compartir información relevante, dependan de medios dispersos y poco estructurados.
+En los últimos años han surgido diferentes soluciones tecnológicas orientadas a la administración de fincas o a la comunicación entre residentes. Sin embargo, no todas estas herramientas están adaptadas a las necesidades reales de comunidades pequeñas y medianas. En muchos casos, se trata de plataformas con funcionalidades parciales, interfaces poco accesibles para determinados perfiles de usuario o modelos de uso excesivamente orientados a entornos profesionales y administrativos.
+Además, una parte importante de las soluciones existentes se centra en resolver un único problema concreto, como la mensajería entre vecinos o la gestión documental, sin ofrecer una integración real entre módulos. Esta fragmentación obliga en ocasiones a combinar varias herramientas externas, lo que incrementa la complejidad del proceso de gestión y reduce la eficiencia organizativa.
+El presente proyecto parte de una necesidad detectada en un contexto real: la ausencia de una plataforma única y estructurada que permita centralizar la operativa cotidiana de una comunidad. En este sentido, ComuniApp se plantea como una propuesta técnica orientada a cubrir ese vacío mediante una solución multiplataforma capaz de integrar comunicación, reservas, incidencias, documentación, notificaciones y gestión básica del presupuesto.
+Por tanto, el desarrollo de este proyecto se justifica por la conveniencia de disponer de una herramienta adaptada al entorno comunitario, con un enfoque práctico, modular y escalable, que permita sustituir procesos manuales o desorganizados por una gestión digital más clara, trazable y eficiente.
+5. ANÁLISIS DEL PROBLEMA
+Actualmente, muchas comunidades de propietarios carecen de un sistema digital centralizado que permita gestionar de forma ordenada sus actividades internas. Como consecuencia, la información se distribuye entre diferentes canales no integrados, lo que complica el seguimiento de acciones, la consulta de datos relevantes y la coordinación entre los distintos miembros de la comunidad.
+Uno de los problemas principales es la falta de seguimiento de incidencias. Cuando una avería o problema se comunica por medios informales, como mensajes privados o conversaciones verbales, resulta difícil mantener un historial claro de cuándo se notificó, quién la reportó, qué actuaciones se realizaron o en qué estado se encuentra. Esta ausencia de trazabilidad puede generar duplicidades, retrasos o incluso la pérdida completa de la incidencia.
+Otro problema habitual es la gestión de reservas de zonas comunes. Sin una herramienta específica, el uso de instalaciones como salas, pistas o espacios compartidos puede dar lugar a conflictos entre usuarios, solapamientos de horarios o falta de control sobre las normas de uso. Esta situación empeora cuando no existe un sistema que permita aplicar restricciones, aprobaciones previas o validaciones por tipo de usuario.
+También se ha identificado una dificultad de acceso a la documentación comunitaria. Actas, normas internas, comunicaciones oficiales o documentos administrativos pueden quedar dispersos entre correos, carpetas físicas o conversaciones, dificultando su consulta y reduciendo la transparencia de la información.
+A ello se suma una comunicación poco estructurada entre vecinos, presidencia y administración. El uso de canales generalistas de mensajería puede resultar útil para mensajes rápidos, pero no ofrece un marco adecuado para comunicaciones formales, publicaciones persistentes ni segmentación de la información por organización o perfil de usuario.
+En conjunto, estos problemas afectan tanto a los residentes como a los responsables de la gestión de la comunidad, generando desorganización, pérdida de tiempo y una menor eficiencia en la administración de recursos y procesos cotidianos.
+6. ACTORES DEL SISTEMA
+Los actores principales del sistema son los siguientes:
+Administrador
+Es el usuario con mayor nivel de control dentro de la plataforma. Su función principal es realizar tareas de administración general del sistema, especialmente aquellas relacionadas con la configuración global, la gestión de organizaciones y la supervisión de usuarios. Entre sus responsabilidades pueden incluirse la creación o actualización de organizaciones, la gestión de altas y bajas, la revisión de datos globales y la realización de operaciones administrativas que afectan al conjunto de la aplicación.
+Presidente
+Es el usuario responsable de la gestión operativa de una comunidad concreta. Dispone de permisos ampliados dentro de su organización y puede intervenir en procesos que requieren validación o supervisión, como la aprobación de determinadas reservas, la gestión de incidencias, la administración de documentos y otras tareas relacionadas con la coordinación interna de la comunidad.
+Vecino
+Es el usuario estándar del sistema y representa al residente o miembro habitual de la comunidad. Sus acciones se centran en el uso diario de la plataforma, como consultar comunicaciones, realizar reservas, reportar incidencias, acceder a documentos disponibles y recibir notificaciones relacionadas con su organización.
+La existencia de estos actores permite aplicar una gestión basada en roles, asegurando que cada usuario acceda únicamente a las funcionalidades y datos que le corresponden en función de su perfil y de su pertenencia a una organización concreta.
+7. CASOS DE USO
+Los casos de uso describen cómo los actores del sistema interactúan con las funcionalidades disponibles en ComuniApp para gestionar una comunidad de propietarios.
+En esta sección se recogen los casos de uso principales realmente implementados en el sistema, centrados en los flujos operativos más frecuentes.
+Actores implicados
+Los casos de uso descritos en esta sección involucran a los actores definidos previamente en el apartado “Actores del sistema”. En particular, participan los siguientes perfiles:
+ADMIN: responsable de la gestión global del sistema, incluyendo administración de usuarios, zonas, invitaciones e importación o exportación de datos.
+PRESIDENT: responsable de la gestión operativa de una organización concreta. Dispone de permisos ampliados dentro de su comunidad para supervisar reservas, incidencias y documentación.
+NEIGHBOR: usuario estándar que utiliza la plataforma en su actividad diaria para consultar información, realizar reservas, reportar incidencias o interactuar con el tablón comunitario.
+CU01 – Iniciar sesión en la plataforma
+El usuario introduce su correo electrónico y contraseña en la interfaz de acceso.
+El sistema valida las credenciales y, si son correctas, genera una sesión autenticada basada en tokens JWT (access token y refresh token). A continuación se carga el perfil del usuario junto con las organizaciones a las que pertenece.
+A partir de ese momento, el acceso a funcionalidades queda condicionado por el rol del usuario y por la organización activa seleccionada.
+CU02 – Seleccionar organización activa
+Cuando un usuario pertenece a varias organizaciones, puede seleccionar la comunidad sobre la que desea operar.
+El sistema establece el contexto activo de organización y limita las operaciones y datos visibles a dicha comunidad, manteniendo el aislamiento lógico entre organizaciones.
+CU03 – Publicar comunicación en el tablón
+Un usuario crea una publicación indicando un título y un contenido dentro del tablón de su organización activa.
+El sistema registra la comunicación y la muestra en el listado del tablón comunitario, permitiendo la interacción posterior mediante comentarios o reacciones por parte de otros usuarios.
+Los usuarios con permisos elevados pueden realizar acciones adicionales de moderación o gestión sobre las publicaciones.
+CU04 – Realizar reserva de zona común
+El usuario selecciona una zona común, una fecha y una franja horaria para realizar una reserva.
+El sistema valida las reglas de negocio definidas para esa zona, como posibles solapamientos, límites de reserva, horarios permitidos o requisitos de antelación.
+Una vez validada la solicitud, el sistema registra la reserva. Dependiendo de la configuración de la zona, la reserva puede quedar confirmada directamente o pendiente de aprobación por parte de un usuario con permisos adecuados.
+CU05 – Reportar incidencia
+El usuario registra una incidencia indicando información como título, descripción, prioridad y, opcionalmente, ubicación o detalles adicionales.
+El sistema almacena la incidencia vinculada a la organización activa y la incorpora al flujo de seguimiento de incidencias de la comunidad.
+CU06 – Gestionar incidencias
+Los usuarios con permisos adecuados (ADMIN o PRESIDENT) pueden revisar las incidencias registradas, añadir comentarios y actualizar su estado.
+El sistema mantiene la trazabilidad de todos los cambios y comentarios realizados hasta la resolución de la incidencia. Los vecinos pueden consultar el estado de las incidencias y participar en el seguimiento según los permisos definidos.
+CU07 – Subir y consultar documentos
+Los usuarios autorizados pueden subir documentos asociados a su comunidad, incluyendo metadatos y archivos adjuntos.
+El sistema almacena el documento, aplica el flujo de aprobación correspondiente cuando sea necesario y lo publica para consulta según las reglas de acceso establecidas.
+Los documentos pueden descargarse posteriormente por los usuarios que tengan permisos para ello.
+CU08 – Gestionar usuarios e invitaciones
+Los usuarios con permisos administrativos (ADMIN o PRESIDENT) pueden generar invitaciones para nuevos usuarios y gestionar los perfiles existentes dentro de la organización.
+El sistema permite listar usuarios, activar o desactivar cuentas, modificar roles y restablecer contraseñas cuando sea necesario.
+Además, los nuevos usuarios pueden registrarse en la plataforma utilizando un token de invitación válido asociado a una organización concreta.
+8. REQUISITOS FUNCIONALES
+A continuación se describen los principales requisitos funcionales del sistema:
+R01 – El sistema permitirá el registro y autenticación de usuarios. La aplicación deberá ofrecer mecanismos para identificar de forma segura a los usuarios y permitir su acceso a la plataforma mediante credenciales válidas.
+R02 – El sistema permitirá iniciar sesión y mantener una sesión autenticada. Una vez validadas las credenciales, el usuario podrá acceder a las funcionalidades disponibles según su rol, manteniendo una sesión activa mientras se encuentre autorizado.
+R03 – El sistema permitirá gestionar múltiples organizaciones. La plataforma deberá soportar un funcionamiento multi-organización, de manera que un mismo usuario pueda pertenecer a varias comunidades y operar dentro del contexto de la organización seleccionada.
+R04 – El sistema permitirá gestionar usuarios y roles. Deberá existir un mecanismo para asignar roles y controlar los permisos de acceso a las distintas funcionalidades del sistema.
+R05 – El sistema permitirá publicar anuncios y comunicaciones internas. Los usuarios autorizados podrán crear publicaciones en un tablón comunitario accesible para los miembros de la organización correspondiente.
+R06 – El sistema permitirá crear, consultar y gestionar reservas de zonas comunes. La aplicación deberá ofrecer un sistema de reservas que permita seleccionar recursos, comprobar disponibilidad y registrar solicitudes.
+R07 – El sistema permitirá aprobar o cancelar reservas cuando sea necesario. En los casos en que la lógica de negocio lo requiera, determinados usuarios podrán validar o rechazar solicitudes de reserva.
+R08 – El sistema permitirá registrar y hacer seguimiento de incidencias. Los usuarios podrán comunicar incidencias, consultar su estado y acceder a la información asociada a su evolución.
+R09 – El sistema permitirá añadir comentarios y actualizar el estado de las incidencias. La gestión de incidencias deberá incluir herramientas de seguimiento que permitan registrar observaciones y cambios de estado.
+R10 – El sistema permitirá subir, consultar y gestionar documentos. La plataforma deberá centralizar el acceso a documentación comunitaria, garantizando su disponibilidad para los usuarios autorizados.
+R11 – El sistema permitirá generar y consultar notificaciones internas. Los usuarios podrán recibir avisos relacionados con cambios, publicaciones, reservas, incidencias u otras acciones relevantes.
+R12 – El sistema permitirá consultar eventos mediante un calendario. La aplicación deberá incluir una vista de calendario para mostrar eventos y fechas significativas de la comunidad.
+R13 – El sistema permitirá gestionar información económica básica de la comunidad. Se incluirá un módulo orientado al registro y consulta de partidas relacionadas con ingresos y gastos.
+R14 – El sistema permitirá realizar tareas administrativas de importación y exportación de datos. Los usuarios con permisos adecuados podrán importar o exportar determinados datos para facilitar la gestión interna.
+9. REQUISITOS NO FUNCIONALES
+A continuación se recogen los principales requisitos no funcionales que debe cumplir el sistema:
+Seguridad
+La aplicación deberá garantizar un acceso seguro mediante autenticación basada en tokens y almacenamiento protegido de credenciales. Asimismo, deberá aplicar restricciones de acceso según el rol del usuario y el contexto de organización activo, evitando accesos no autorizados a funcionalidades o datos que no correspondan a cada perfil.
+Rendimiento
+El sistema deberá ofrecer tiempos de respuesta adecuados en operaciones habituales, como autenticación, consulta de publicaciones, gestión de reservas o acceso a incidencias. La arquitectura deberá permitir un funcionamiento fluido en escenarios de uso concurrente dentro de los límites esperables para una comunidad de pequeño o mediano tamaño.
+Usabilidad
+La interfaz deberá ser clara, accesible y coherente, permitiendo que usuarios con diferentes niveles de experiencia tecnológica puedan utilizar la plataforma sin dificultad. La navegación entre módulos deberá ser sencilla y mantener una estructura visual homogénea.
+Escalabilidad
+La solución deberá permitir su evolución futura, tanto en número de organizaciones como en funcionalidades implementadas. Para ello, la arquitectura elegida debe facilitar la incorporación de nuevos módulos, servicios o integraciones sin necesidad de rediseñar por completo el sistema.
+Mantenibilidad
+El proyecto deberá estar estructurado de forma modular y comprensible, favoreciendo la separación de responsabilidades entre interfaz, lógica de negocio y persistencia de datos. Esto permitirá corregir errores, aplicar mejoras y ampliar el sistema con mayor facilidad.
+Portabilidad
+La aplicación deberá poder ejecutarse en distintos entornos, tanto en navegador web como en dispositivos móviles compatibles, aprovechando el enfoque multiplataforma del frontend y el despliegue desacoplado del backend.
+Integridad de los datos
+El sistema deberá preservar la consistencia de la información almacenada, evitando registros incoherentes, duplicados no controlados o asociaciones inválidas entre entidades relacionadas.
+10. PROPUESTA DE SOLUCIÓN
+La solución propuesta consiste en el desarrollo de una aplicación multiplataforma orientada a digitalizar la gestión interna de comunidades de vecinos y urbanizaciones. El sistema se ha diseñado siguiendo una arquitectura cliente-servidor que permite separar claramente la interfaz de usuario, la lógica de negocio y el almacenamiento de datos.
+Desde el punto de vista funcional, la aplicación integra distintos módulos que cubren las necesidades más habituales en la operativa de una comunidad. Entre ellos se encuentran la gestión de reservas de zonas comunes, el registro y seguimiento de incidencias, la publicación de comunicaciones en un tablón comunitario, la consulta y gestión de documentos, la recepción de notificaciones internas, la visualización de eventos en un calendario y el registro de información económica básica.
+La solución se apoya en una API REST desarrollada con FastAPI, encargada de centralizar la lógica de negocio del sistema y gestionar las operaciones relacionadas con autenticación, reservas, incidencias, documentos, notificaciones y administración. Esta API interactúa con una base de datos PostgreSQL, donde se almacena toda la información persistente del sistema.
+La interfaz de usuario se desarrolla utilizando Flutter, lo que permite ofrecer una experiencia multiplataforma accesible desde navegadores web y dispositivos móviles utilizando una única base de código.
+Además, el sistema incorpora un modelo multi-organización (multi-tenant) que permite que una misma instancia de la aplicación gestione varias comunidades manteniendo el aislamiento lógico de los datos entre ellas. Para ello, cada operación se ejecuta dentro del contexto de la organización activa seleccionada por el usuario.
+Por otra parte, la aplicación implementa un sistema de control de acceso basado en roles que diferencia las capacidades disponibles para administradores, presidentes y vecinos. Este enfoque permite adaptar la funcionalidad disponible según el perfil del usuario y garantizar que cada actor acceda únicamente a las operaciones que le corresponden.
+En conjunto, la solución propuesta permite centralizar la gestión comunitaria en una única plataforma estructurada, reduciendo la dispersión de la información y mejorando la organización de los procesos internos.
+11. ARQUITECTURA DEL SISTEMA
+El sistema desarrollado sigue una arquitectura cliente-servidor basada en servicios web. En este modelo, el frontend actúa como cliente de la aplicación y se comunica con el backend mediante una API REST, lo que permite desacoplar la interfaz de usuario de la lógica de negocio y del acceso a los datos.
+El frontend, desarrollado con Flutter, se encarga de la interacción con el usuario, la navegación entre pantallas y la presentación de la información. La aplicación utiliza una arquitectura organizada por módulos funcionales y gestiona el estado mediante Riverpod. La navegación entre pantallas se implementa utilizando GoRouter, lo que permite definir rutas protegidas según el estado de autenticación del usuario.
+El backend, implementado con FastAPI, centraliza la lógica de negocio del sistema. La estructura del backend sigue una organización por capas en la que se distinguen:
+Routers, encargados de definir los endpoints de la API.
+Services, donde se implementa la lógica de negocio.
+Models y schemas, que representan las entidades de la base de datos y los esquemas de validación.
+La comunicación entre frontend y backend se realiza mediante peticiones HTTP en formato JSON. Las operaciones autenticadas utilizan tokens JWT enviados en la cabecera Authorization.
+El sistema incorpora además un mecanismo de multi-organización, mediante el cual cada petición incluye una cabecera que indica la organización activa. Esto permite que una misma aplicación gestione múltiples comunidades manteniendo el aislamiento lógico de los datos.
+La persistencia de datos se gestiona mediante PostgreSQL, utilizando SQLAlchemy como capa de acceso a la base de datos y Alembic para la gestión de migraciones.
+Este enfoque arquitectónico favorece la modularidad del sistema, facilita su mantenimiento y permite la incorporación futura de nuevas funcionalidades sin necesidad de modificar de forma significativa la estructura existente.
+12. MODELO DE DATOS
+El modelo de datos de ComuniApp se ha diseñado para representar de forma estructurada los elementos principales implicados en la gestión de una comunidad de vecinos. La base del sistema gira en torno a la relación entre usuarios y organizaciones, permitiendo que un mismo usuario pueda pertenecer a distintas comunidades y operar dentro del contexto de la organización activa.
+La entidad Usuario almacena la información básica de autenticación e identificación de cada persona que accede a la plataforma. La entidad Organización representa a cada comunidad o urbanización gestionada por el sistema. La relación entre ambas entidades permite modelar la pertenencia de usuarios a una o varias organizaciones.
+A partir de esta estructura principal, se definen otras entidades funcionales. Las Zonas representan espacios comunes reservables dentro de una organización, mientras que las Reservas registran las solicitudes o asignaciones realizadas por los usuarios sobre dichas zonas. Las Incidencias permiten almacenar problemas o avisos comunicados por los miembros de la comunidad, junto con su estado y seguimiento. Los Documentos centralizan archivos y recursos relevantes para la comunidad. Las Publicaciones modelan el tablón de anuncios interno, y las Notificaciones permiten registrar eventos comunicados a los usuarios.
+Asimismo, el sistema contempla entidades relacionadas con la gestión económica, como las partidas o movimientos del módulo de Presupuesto, y estructuras auxiliares orientadas al control de acceso, trazabilidad o configuración de comportamiento según el perfil del usuario.
+En conjunto, el modelo de datos responde a una lógica modular y relacional, adaptada a las necesidades funcionales del proyecto y preparada para futuras ampliaciones.
+13. MÓDULOS DEL SISTEMA
+[DIAGRAMA DE COMPONENTES]
+La aplicación se organiza en distintos módulos funcionales que estructuran el sistema en áreas independientes de responsabilidad. Cada módulo agrupa funcionalidades relacionadas y permite mantener una arquitectura clara, modular y mantenible. Esta organización facilita el desarrollo, la ampliación futura del sistema y la separación entre diferentes dominios funcionales.
+Módulo de autenticación y gestión de sesión
+Este módulo se encarga de la identificación de usuarios dentro del sistema. Gestiona el proceso de inicio de sesión, la validación de credenciales, la generación de tokens de autenticación y el mantenimiento de la sesión activa. Para garantizar la seguridad del sistema, la autenticación se implementa mediante tokens JWT utilizados en las peticiones realizadas a la API.
+Módulo de organizaciones y multi-comunidad
+Este módulo gestiona la pertenencia de usuarios a distintas organizaciones o comunidades. Un mismo usuario puede pertenecer a varias comunidades y operar dentro del contexto de la organización seleccionada. Este enfoque permite aplicar un modelo multi-tenant que garantiza el aislamiento lógico de los datos entre diferentes organizaciones.
+Módulo de roles y permisos
+Define los distintos niveles de acceso dentro de la plataforma. Los roles principales del sistema son administrador, presidente y vecino, cada uno con permisos específicos sobre las funcionalidades disponibles. Este módulo permite controlar qué acciones puede realizar cada usuario dentro del sistema.
+Módulo de tablón y comunicaciones
+Permite publicar anuncios dentro de la comunidad y consultar comunicaciones internas. Las publicaciones pueden incluir comentarios e interacciones entre los usuarios, lo que facilita una comunicación estructurada dentro de la plataforma.
+Módulo de reservas
+Este módulo gestiona la disponibilidad y uso de zonas comunes dentro de cada organización. Permite crear reservas, consultar disponibilidad y gestionar cancelaciones o aprobaciones cuando sea necesario. El sistema aplica validaciones para evitar solapamientos de horarios y garantizar el correcto uso de los recursos comunitarios.
+Módulo de incidencias
+Permite registrar problemas o incidencias detectadas en la comunidad. Cada incidencia puede incluir comentarios, actualizaciones y cambios de estado que permiten realizar un seguimiento de su evolución y mantener un historial de las acciones realizadas.
+Módulo documental
+Centraliza la gestión de documentos comunitarios, permitiendo subir archivos, consultarlos y controlar su visibilidad dentro de la organización. El acceso a los documentos puede restringirse según el rol del usuario.
+Módulo de notificaciones
+Se encarga de informar a los usuarios sobre eventos relevantes del sistema, como nuevas publicaciones, cambios en reservas, incidencias o acciones administrativas. Las notificaciones se almacenan dentro del sistema para que puedan ser consultadas posteriormente.
+Módulo de calendario
+Ofrece una vista temporal que permite consultar eventos relevantes y reservas de la comunidad organizados por fecha. Este módulo facilita la visualización de la actividad comunitaria de forma estructurada.
+Módulo de presupuesto
+Permite registrar y consultar información económica básica relacionada con ingresos y gastos de la comunidad. El sistema permite visualizar los movimientos registrados y obtener una visión general del estado económico de la organización.
+Módulo de administración
+Incluye herramientas avanzadas de gestión del sistema, como la administración de usuarios, la gestión de organizaciones, la importación o exportación de datos y otras operaciones administrativas necesarias para el mantenimiento de la plataforma.
+Módulo de invitaciones
+Permite gestionar el registro controlado de nuevos usuarios mediante tokens de invitación asociados a una organización. Este mecanismo facilita el alta de nuevos miembros dentro de la comunidad de forma segura.
+Módulo de perfil de usuario
+Permite a cada usuario consultar y modificar su información personal, así como realizar operaciones relacionadas con su cuenta, como el cambio de contraseña o la actualización de datos personales.
+Módulo de estadísticas
+Proporciona una visión general del estado de la comunidad mediante indicadores básicos relacionados con reservas, incidencias y actividad del sistema. Estos indicadores permiten obtener una visión rápida del funcionamiento de la plataforma.
+14. PLAN DE TRABAJO
+El desarrollo del proyecto se ha organizado en una serie de fases consecutivas con el objetivo de estructurar el trabajo de manera progresiva y coherente. Esta planificación permite abordar el proyecto desde una perspectiva ordenada, comenzando por el análisis del problema y finalizando con la documentación y presentación de la solución desarrollada.
+La primera fase corresponde al análisis, en la que se identifican las necesidades del sistema, los perfiles de usuario y los requisitos funcionales y no funcionales que debe cumplir la aplicación. Esta fase resulta fundamental para definir con claridad el alcance del proyecto.
+La segunda fase es la de diseño, en la que se establece la arquitectura general del sistema, se organiza el modelo de datos y se plantea la estructura de los módulos principales de la aplicación. También se define el enfoque de navegación y la organización general de la interfaz.
+A continuación, se aborda la fase de implementación del backend, centrada en el desarrollo de la API, la lógica de negocio, la autenticación, la persistencia de datos y el conjunto de servicios necesarios para soportar la funcionalidad principal del sistema.
+Posteriormente se desarrolla el frontend, en el que se implementan las pantallas, flujos de navegación y mecanismos de interacción con el backend. Esta fase incluye la integración progresiva de los diferentes módulos funcionales de la aplicación.
+Tras ello, se lleva a cabo la fase de integración y pruebas, en la que se verifica el correcto funcionamiento conjunto de todos los componentes, se corrigen errores detectados y se validan los flujos principales de uso.
+Por último, se dedica una fase específica a la documentación, incluyendo la redacción de la memoria técnica, la preparación de diagramas, la selección de capturas y la organización de anexos.
+Esta planificación permite reflejar de forma clara la evolución del proyecto y justificar el proceso seguido durante su desarrollo.
+15. DIAGRAMA DE GANTT
+A continuación se presenta el diagrama de Gantt correspondiente a la planificación temporal del proyecto. En él se representan las principales fases del desarrollo, desde el análisis inicial del problema hasta la documentación final de la solución implementada.
+El diagrama permite visualizar de forma sintética la distribución temporal de las tareas, su secuencia lógica y la relación entre las distintas etapas del proyecto. De este modo, constituye una herramienta útil para justificar la organización del trabajo y mostrar la evolución prevista del desarrollo.
+16. PRESUPUESTO
+Aunque el proyecto ha sido desarrollado con finalidad académica, es posible realizar una estimación económica orientativa del coste que supondría desarrollar una solución de estas características en un entorno profesional. Para ello, sería necesario tener en cuenta tanto el tiempo de trabajo invertido como los recursos técnicos utilizados durante el desarrollo.
+Desde una perspectiva general, el presupuesto debería contemplar al menos los siguientes bloques:
+Análisis y definición de requisitos;
+Diseño técnico y estructural del sistema;
+Desarrollo del backend;
+Desarrollo del frontend;
+Integración y pruebas;
+Documentación;
+Infraestructura y herramientas de soporte.
+Dado que en este momento no se han fijado de forma definitiva las horas de dedicación ni el coste por hora, este apartado puede dejarse provisionalmente preparado para completar más adelante con una tabla final de detalle.
+Plantilla de presupuesto:
+Concepto
+Horas estimadas
+Coste/hora
+Subtotal
+Análisis y requisitos
+X h
+X €/h
+X €
+Diseño de la solución
+X h
+X €/h
+X €
+Desarrollo backend
+X h
+X €/h
+X €
+Desarrollo frontend
+X h
+X €/h
+X €
+Integración y pruebas
+X h
+X €/h
+X €
+Documentación
+X h
+X €/h
+X €
+Infraestructura / herramientas
+X
+X €
+X €
+TOTAL
+X €
+17. EVOLUCIÓN Y TRABAJO FUTURO
+El sistema desarrollado constituye una base funcional sólida para la gestión digital de comunidades de vecinos, pero su diseño modular permite plantear diferentes líneas de evolución futura orientadas a ampliar sus capacidades y mejorar la experiencia de uso.
+Una posible mejora consistiría en completar la integración de notificaciones push en clientes móviles, de forma que los usuarios pudieran recibir avisos en tiempo real sin necesidad de acceder manualmente a la aplicación. Esta ampliación reforzaría la utilidad del sistema en procesos como reservas, incidencias o comunicaciones urgentes.
+Otra línea de evolución interesante sería la incorporación de un módulo de encuestas o votaciones, orientado a facilitar la participación de los vecinos en decisiones comunitarias. Esta funcionalidad podría resultar especialmente útil en entornos donde la digitalización de la comunicación interna forme parte del día a día de la comunidad.
+También sería posible ampliar el módulo económico con capacidades más avanzadas, como informes financieros, filtros por periodos, generación de resúmenes detallados o herramientas adicionales para la gestión de gastos e ingresos.
+Desde el punto de vista de la administración del sistema, podrían añadirse mecanismos más completos de auditoría y trazabilidad, permitiendo registrar con mayor detalle las acciones realizadas por cada usuario dentro de la plataforma.
+Otras mejoras potenciales incluyen la integración con servicios externos, la evolución del sistema documental, la ampliación del calendario comunitario y una futura orientación a despliegues más automatizados o entornos productivos más completos.
+En definitiva, ComuniApp se concibe como una base técnica extensible, sobre la que pueden desarrollarse nuevas funcionalidades en función de las necesidades reales de las comunidades usuarias.
+18. BIBLIOGRAFÍA
+A continuación se recogen las principales fuentes de documentación técnica utilizadas como referencia para el desarrollo del proyecto y la elaboración de la memoria:
+FastAPI. FastAPI Documentation. Disponible en: https://fastapi.tiangolo.com
+Flutter. Flutter Documentation. Disponible en: https://flutter.dev
+PostgreSQL Global Development Group. PostgreSQL Documentation. Disponible en: https://www.postgresql.org/docs/
+SQLAlchemy. SQLAlchemy Documentation. Disponible en: https://docs.sqlalchemy.org
+Mermaid. Mermaid Documentation. Disponible en: https://mermaid.js.org
+Docker. Docker Documentation. Disponible en: https://docs.docker.com
+19. TECNOLOGÍAS UTILIZADAS
+El desarrollo del proyecto se apoya en diferentes tecnologías que permiten implementar tanto la interfaz de usuario como la lógica del sistema y la persistencia de datos.
+Backend
+El backend de la aplicación se ha desarrollado utilizando FastAPI, un framework moderno para la construcción de APIs REST en Python. FastAPI permite definir endpoints de forma clara, validar datos mediante Pydantic y ofrecer un alto rendimiento en aplicaciones web.
+Para la gestión de la base de datos se utiliza SQLAlchemy, que actúa como capa de acceso a datos y facilita la interacción entre el código del backend y la base de datos relacional.
+Las migraciones de base de datos se gestionan mediante Alembic, lo que permite evolucionar el esquema de la base de datos de forma controlada.
+Base de datos
+La persistencia de datos se implementa mediante PostgreSQL, un sistema de gestión de bases de datos relacional ampliamente utilizado en aplicaciones web.
+Frontend
+La interfaz de usuario se desarrolla utilizando Flutter, un framework multiplataforma que permite construir aplicaciones para web y dispositivos móviles a partir de una única base de código escrita en el lenguaje Dart.
+Para la gestión del estado de la aplicación se utiliza Riverpod, mientras que la navegación entre pantallas se implementa mediante GoRouter.
+Herramientas de desarrollo
+Durante el desarrollo del proyecto se han utilizado diferentes herramientas de soporte, entre ellas:
+Docker y Docker Compose para la ejecución de servicios locales
+pgAdmin para la administración de la base de datos
+Git para el control de versiones
+Swagger/OpenAPI para la documentación automática de la API
+20. ANEXOS
+Capturas de la aplicación
+Fragmentos de código
+Endpoints de la API
+Ejemplos de base de datos

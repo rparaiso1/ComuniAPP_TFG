@@ -278,11 +278,8 @@ TFG/
 
 ## 12. Problemas conocidos y deuda técnica
 
-### Prioridad media:
-- `NotificationsService` (push local) definido pero no integrado completamente
+### Prioridad baja:
 - `form_validators.dart` sin i18n (sin BuildContext)
 - Animaciones `TweenAnimationBuilder` en items de lista se re-evalúan al scroll
-
-### Prioridad baja:
 - `appRouter` global en vez de provider inyectable
 - Migrar `dart:html` completamente a `package:web` (ya parcialmente hecho)

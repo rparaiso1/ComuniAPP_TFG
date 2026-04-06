@@ -93,36 +93,3 @@ def change_password(
 def logout():
     """Logout (el cliente descarta el token)."""
     return {"message": "Successfully logged out"}
-
-
-# ============ Device Token (FCM Push Notifications) ============
-
-class DeviceTokenRequest(BaseModel):
-    token: str
-    platform: str = "web"  # web, android, ios
-
-
-@router.post("/device-token")
-def register_device_token(
-    data: DeviceTokenRequest,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    """Registrar un FCM token para recibir push notifications."""
-    from app.services.fcm_service import FCMService
-    result = FCMService(db).register_token(current_user.id, data.token, data.platform)
-    return result
-
-
-@router.delete("/device-token")
-def unregister_device_token(
-    data: DeviceTokenRequest,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    """Eliminar un FCM token (unsubscribe de push notifications)."""
-    from app.services.fcm_service import FCMService
-    found = FCMService(db).unregister_token(current_user.id, data.token)
-    if not found:
-        raise HTTPException(status_code=404, detail="Token no encontrado")
-    return {"message": "Token eliminado"}
