@@ -89,18 +89,60 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1D4ED8),
-              Color(0xFF2563EB),
-              Color(0xFF0EA5E9),
-            ],
-          ),
-        ),
+      body: Builder(
+        builder: (context) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final gradientColors = isDark
+              ? const [Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF0F172A)]
+              : const [Color(0xFF1D4ED8), Color(0xFF2563EB), Color(0xFF0EA5E9)];
+          // Glass overlay tint
+          final glassBg = isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.white.withValues(alpha: 0.15);
+          final glassBorder = isDark
+              ? Colors.white.withValues(alpha: 0.10)
+              : Colors.white.withValues(alpha: 0.2);
+          // Text on gradient
+          final headlineColor = Colors.white;
+          final subtitleColor = Colors.white.withValues(alpha: 0.9);
+          // Input field styling
+          final inputBg = isDark
+              ? const Color(0xFF1E293B).withValues(alpha: 0.95)
+              : Colors.white.withValues(alpha: 0.95);
+          final inputBorderColor = isDark
+              ? const Color(0xFF475569).withValues(alpha: 0.4)
+              : const Color(0xFF2563EB).withValues(alpha: 0.2);
+          final inputTextColor = isDark
+              ? const Color(0xFFF1F5F9)
+              : const Color(0xFF1E293B);
+          final inputLabelColor = isDark
+              ? const Color(0xFFCBD5E1).withValues(alpha: 0.7)
+              : const Color(0xFF1E293B).withValues(alpha: 0.6);
+          final inputIconColor = isDark
+              ? const Color(0xFF60A5FA).withValues(alpha: 0.8)
+              : const Color(0xFF2563EB).withValues(alpha: 0.7);
+          final inputShadowColor = isDark
+              ? Colors.black.withValues(alpha: 0.2)
+              : const Color(0xFF2563EB).withValues(alpha: 0.1);
+          // Button
+          final buttonGradient = isDark
+              ? const LinearGradient(colors: [Color(0xFF1E3A5F), Color(0xFF1E293B)])
+              : const LinearGradient(colors: [Color(0xFFF0F4FF), Colors.white]);
+          final buttonForeground = isDark
+              ? const Color(0xFF60A5FA)
+              : const Color(0xFF2563EB);
+          final buttonDisabledBg = isDark
+              ? const Color(0xFF1E293B).withValues(alpha: 0.5)
+              : Colors.white.withValues(alpha: 0.5);
+
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: gradientColors,
+              ),
+            ),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -125,27 +167,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
+                          color: glassBg,
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3),
+                            color: glassBorder,
                             width: 2,
                           ),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.apartment,
                           size: 80,
-                          color: Colors.white,
+                          color: headlineColor,
                         ),
                       ),
                     ),
                     const SizedBox(height: 32),
                     Text(
                       context.l.welcome,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: headlineColor,
                         letterSpacing: 1,
                       ),
                     ),
@@ -154,7 +196,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       context.l.communityManagement,
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: subtitleColor,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -163,15 +205,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     Container(
                       padding: const EdgeInsets.all(32),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
+                        color: glassBg,
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.2),
+                          color: glassBorder,
                           width: 1.5,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
+                            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
                             blurRadius: 30,
                             offset: const Offset(0, 10),
                           ),
@@ -189,6 +231,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               enabled: !_isLoggingIn,
                               validator: FormValidators.email(context),
                               textInputAction: TextInputAction.next,
+                              backgroundColor: inputBg,
+                              borderColor: inputBorderColor,
+                              textColor: inputTextColor,
+                              labelColor: inputLabelColor,
+                              iconColor: inputIconColor,
+                              shadowColor: inputShadowColor,
                             ),
                             const SizedBox(height: 20),
                             _GlassTextField(
@@ -200,10 +248,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               validator: FormValidators.required(context, fieldName: context.l.thePassword),
                               onFieldSubmitted: _handleLogin,
                               textInputAction: TextInputAction.done,
+                              backgroundColor: inputBg,
+                              borderColor: inputBorderColor,
+                              textColor: inputTextColor,
+                              labelColor: inputLabelColor,
+                              iconColor: inputIconColor,
+                              shadowColor: inputShadowColor,
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                  color: const Color(0xFF2563EB).withValues(alpha: 0.6),
+                                  color: inputIconColor,
                                   size: 22,
                                 ),
                                 tooltip: _obscurePassword ? context.l.showPassword : context.l.hidePassword,
@@ -219,16 +273,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             decoration: BoxDecoration(
                               gradient: _isLoggingIn
                                   ? null
-                                  : const LinearGradient(
-                                colors: [Color(0xFFF0F4FF), Colors.white],
-                              ),
+                                  : buttonGradient,
                               color: _isLoggingIn
-                                  ? Colors.white.withValues(alpha: 0.5)
+                                  ? buttonDisabledBg
                                   : null,
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.2),
+                                  color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.2),
                                   blurRadius: 15,
                                   offset: const Offset(0, 8),
                                 ),
@@ -238,21 +290,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               onPressed: _isLoggingIn ? null : _handleLogin,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
-                                foregroundColor: const Color(0xFF2563EB),
+                                foregroundColor: buttonForeground,
                                 shadowColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
                               child: _isLoggingIn
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                 height: 24,
                                 width: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 3,
                                   valueColor:
                                   AlwaysStoppedAnimation<Color>(
-                                      Color(0xFF2563EB)),
+                                      buttonForeground),
                                 ),
                               )
                                   : Text(
@@ -281,7 +333,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               children: [
                                 Icon(
                                   Icons.mail_outline,
-                                  color: Colors.white.withValues(alpha: 0.9),
+                                  color: subtitleColor,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
@@ -289,7 +341,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   child: Text(
                                     context.l.hasInvitation,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: subtitleColor,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -309,6 +361,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
           ),
         ),
+      );
+        },
       ),
     );
   }
@@ -325,11 +379,23 @@ class _GlassTextField extends StatelessWidget {
   final VoidCallback? onFieldSubmitted;
   final TextInputAction? textInputAction;
   final Widget? suffixIcon;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color textColor;
+  final Color labelColor;
+  final Color iconColor;
+  final Color shadowColor;
 
   const _GlassTextField({
     required this.controller,
     required this.labelText,
     required this.prefixIcon,
+    required this.backgroundColor,
+    required this.borderColor,
+    required this.textColor,
+    required this.labelColor,
+    required this.iconColor,
+    required this.shadowColor,
     this.obscureText = false,
     this.keyboardType,
     this.enabled = true,
@@ -343,15 +409,15 @@ class _GlassTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.95),
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF2563EB).withValues(alpha: 0.2),
+          color: borderColor,
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2563EB).withValues(alpha: 0.1),
+            color: shadowColor,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -366,25 +432,25 @@ class _GlassTextField extends StatelessWidget {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onFieldSubmitted: onFieldSubmitted != null ? (_) => onFieldSubmitted!() : null,
         textInputAction: textInputAction,
-        style: const TextStyle(
-          color: Color(0xFF1E293B),
+        style: TextStyle(
+          color: textColor,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(
-            color: const Color(0xFF1E293B).withValues(alpha: 0.6),
+            color: labelColor,
             fontSize: 14,
           ),
-          floatingLabelStyle: const TextStyle(
-            color: Color(0xFF2563EB),
+          floatingLabelStyle: TextStyle(
+            color: iconColor,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
           prefixIcon: Icon(
             prefixIcon,
-            color: const Color(0xFF2563EB).withValues(alpha: 0.7),
+            color: iconColor,
             size: 22,
           ),
           suffixIcon: suffixIcon,
