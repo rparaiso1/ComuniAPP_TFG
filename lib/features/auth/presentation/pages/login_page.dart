@@ -53,9 +53,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
       final authState = ref.read(authControllerProvider);
 
-      if (authState.isAuthenticated) {
-        context.goNamed('home');
-      } else if (authState.error != null) {
+      if (authState.error != null) {
         final friendlyMessage = ErrorDialog.getFriendlyMessage(context, authState.error!);
         ErrorDialog.show(
           context,

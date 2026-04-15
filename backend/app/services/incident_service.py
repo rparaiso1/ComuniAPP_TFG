@@ -17,9 +17,6 @@ from app.core.exceptions import ServiceError, NotFoundError, ForbiddenError
 
 logger = logging.getLogger(__name__)
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-IncidentError = ServiceError
-
 
 class IncidentService:
 
@@ -77,14 +74,14 @@ class IncidentService:
                 status_enum = IncidentStatus(status_filter)
                 query = query.filter(Incident.status == status_enum)
             except ValueError:
-                pass  # Invalid filter value, ignore
+                raise ServiceError(f"Estado inv\u00e1lido: {status_filter}")
         if priority_filter:
             try:
                 priority_enum = IncidentPriority(priority_filter)
                 query = query.filter(Incident.priority == priority_enum)
                 logger.info("Priority filter applied: %s -> %s", priority_filter, priority_enum)
             except ValueError:
-                logger.warning("Invalid priority filter value: %s", priority_filter)
+                raise ServiceError(f"Prioridad inválida: {priority_filter}")
         if my_only and user_id:
             query = query.filter(Incident.reporter_id == user_id)
         incidents = (
@@ -149,7 +146,7 @@ class IncidentService:
         # Reporter cannot delete incidents that are already being managed
         if not is_admin:
             inc_status = incident.status.value if hasattr(incident.status, 'value') else str(incident.status)
-            if inc_status in ('in_progress', 'resolved', 'closed'):
+            if inc_status in ('in_progress', 'resolved'):
                 raise ForbiddenError(
                     "No puedes eliminar una incidencia que ya está siendo gestionada. Contacta con el administrador.",
                 )
@@ -161,8 +158,8 @@ class IncidentService:
     def add_comment(self, incident_id: UUID, data: IncidentCommentCreate, user_id: UUID, org_ids: List[UUID]) -> IncidentComment:
         incident = self.get(incident_id, org_ids)
         inc_status = incident.status.value if hasattr(incident.status, 'value') else str(incident.status)
-        if inc_status in ('resolved', 'closed'):
-            raise ServiceError("No se pueden añadir comentarios a una incidencia cerrada o resuelta")
+        if inc_status == 'resolved':
+            raise ServiceError("No se pueden añadir comentarios a una incidencia resuelta")
         comment = IncidentComment(
             incident_id=incident.id, author_id=user_id,
             content=data.content, image_url=data.image_url,

@@ -118,11 +118,15 @@ async def get_current_user(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
     
     # Check tenant contract expiration
-    if user.contract_end and user.contract_end < datetime.now(timezone.utc):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Tu contrato ha expirado. Contacta con el administrador.",
-        )
+    if user.contract_end:
+        contract_end = user.contract_end
+        if contract_end.tzinfo is None:
+            contract_end = contract_end.replace(tzinfo=timezone.utc)
+        if contract_end < datetime.now(timezone.utc):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Tu contrato ha expirado. Contacta con el administrador.",
+            )
     
     return user
 

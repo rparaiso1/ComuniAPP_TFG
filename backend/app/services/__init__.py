@@ -22,34 +22,34 @@ from app.core.exceptions import (
     ConflictError, UnauthorizedError,
 )
 
-from app.services.auth_service import AuthService, AuthError
-from app.services.booking_service import BookingService, BookingError
-from app.services.incident_service import IncidentService, IncidentError
+from app.services.auth_service import AuthService
+from app.services.booking_service import BookingService
+from app.services.incident_service import IncidentService
 from app.services.notification_service import NotificationService
-from app.services.post_service import PostService, PostError
-from app.services.document_service import DocumentService, DocumentError
-from app.services.organization_service import OrganizationService, OrganizationError
-from app.services.invitation_service import InvitationService, InvitationError
-from app.services.zone_service import ZoneService, ZoneError
+from app.services.post_service import PostService
+from app.services.document_service import DocumentService
+from app.services.organization_service import OrganizationService
+from app.services.invitation_service import InvitationService
+from app.services.zone_service import ZoneService
 from app.services.stats_service import StatsService
 from app.services.calendar_service import CalendarService
-from app.services.admin_service import AdminService, AdminError
+from app.services.admin_service import AdminService
 
 __all__ = [
     # Excepciones semánticas
     "ServiceError", "NotFoundError", "ForbiddenError",
     "ConflictError", "UnauthorizedError",
-    # Servicios + alias de error por retrocompatibilidad
-    "AuthService", "AuthError",
-    "BookingService", "BookingError",
-    "IncidentService", "IncidentError",
+    # Servicios
+    "AuthService",
+    "BookingService",
+    "IncidentService",
     "NotificationService",
-    "PostService", "PostError",
-    "DocumentService", "DocumentError",
-    "OrganizationService", "OrganizationError",
-    "InvitationService", "InvitationError",
-    "ZoneService", "ZoneError",
+    "PostService",
+    "DocumentService",
+    "OrganizationService",
+    "InvitationService",
+    "ZoneService",
     "StatsService",
     "CalendarService",
-    "AdminService", "AdminError",
+    "AdminService",
 ]

@@ -15,10 +15,6 @@ from app.models.organization import Organization
 from app.schemas.user import UserCreate, UserUpdate
 
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-AuthError = ServiceError
-
-
 class AuthService:
     """Servicio de autenticación sin dependencias HTTP."""
 

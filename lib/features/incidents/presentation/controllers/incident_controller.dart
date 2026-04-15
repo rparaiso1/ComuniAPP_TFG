@@ -148,6 +148,7 @@ class IncidentController extends Notifier<IncidentState> {
       state = state.copyWith(
         incidents: [newIncident, ...state.incidents],
         isCreating: false,
+        currentSkip: state.currentSkip + 1,
       );
     } catch (e) {
       state = state.copyWith(
@@ -178,6 +179,7 @@ class IncidentController extends Notifier<IncidentState> {
       await repository.deleteIncident(incidentId);
       state = state.copyWith(
         incidents: state.incidents.where((i) => i.id != incidentId).toList(),
+        currentSkip: state.currentSkip > 0 ? state.currentSkip - 1 : 0,
       );
     } catch (e) {
       state = state.copyWith(error: e.toString());

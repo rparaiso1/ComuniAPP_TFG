@@ -146,6 +146,7 @@ class DocumentController extends Notifier<DocumentState> {
       state = state.copyWith(
         documents: [newDocument, ...state.documents],
         isUploading: false,
+        currentSkip: state.currentSkip + 1,
       );
     } catch (e) {
       state = state.copyWith(
@@ -160,6 +161,7 @@ class DocumentController extends Notifier<DocumentState> {
       await repository.deleteDocument(documentId);
       state = state.copyWith(
         documents: state.documents.where((d) => d.id != documentId).toList(),
+        currentSkip: state.currentSkip > 0 ? state.currentSkip - 1 : 0,
       );
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -185,6 +187,7 @@ class DocumentController extends Notifier<DocumentState> {
       state = state.copyWith(
         documents: [newDocument, ...state.documents],
         isUploading: false,
+        currentSkip: state.currentSkip + 1,
       );
       return true;
     } catch (e) {

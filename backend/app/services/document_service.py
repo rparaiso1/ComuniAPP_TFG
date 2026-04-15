@@ -10,9 +10,6 @@ from app.models.document import Document, DocumentApprovalStatus
 from app.schemas.document import DocumentCreate, DocumentResponse, DocumentApproveRequest
 from app.core.exceptions import ServiceError, NotFoundError, ForbiddenError
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-DocumentError = ServiceError
-
 
 class DocumentService:
 

@@ -27,8 +27,9 @@ class RefreshTokenRequest(BaseModel):
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def register(user_data: UserCreate, db: Session = Depends(get_db)):
+async def register(user_data: UserCreate, request: Request, db: Session = Depends(get_db)):
     """Registrar un nuevo usuario (solo rol NEIGHBOR)."""
+    await check_auth_rate_limit(request)
     user = AuthService(db).register(user_data)
     logger.info(f"User registered: {user.email}")
     return user
@@ -48,8 +49,9 @@ async def login(login_data: LoginRequest, request: Request, db: Session = Depend
 
 
 @router.post("/refresh", response_model=Token)
-def refresh_token(body: RefreshTokenRequest, db: Session = Depends(get_db)):
+async def refresh_token(body: RefreshTokenRequest, request: Request, db: Session = Depends(get_db)):
     """Obtener nuevos tokens usando un refresh_token válido."""
+    await check_auth_rate_limit(request)
     payload = decode_access_token(body.refresh_token)
     if not payload or payload.get("type") != "refresh":
         raise HTTPException(status_code=401, detail="Invalid refresh token")
@@ -79,12 +81,14 @@ def update_profile(
 
 
 @router.post("/change-password")
-def change_password(
+async def change_password(
     data: ChangePasswordRequest,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Cambiar contraseña del usuario actual."""
+    await check_auth_rate_limit(request)
     AuthService(db).change_password(current_user, data.current_password, data.new_password)
     return {"message": "Contraseña actualizada correctamente"}
 

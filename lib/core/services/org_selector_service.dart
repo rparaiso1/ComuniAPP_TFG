@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/auth/domain/entities/user_organization.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
+import '../di/providers.dart';
 import 'local_storage_service.dart';
 
 /// Manages the currently selected organization for multi-org users.
@@ -11,7 +12,7 @@ class OrgSelectorService extends Notifier<String?> {
 
   @override
   String? build() {
-    _storage = LocalStorageService();
+    _storage = ref.watch(localStorageProvider);
     // Restore persisted org
     final saved = _storage.getSetting(_storageKey);
     if (saved is String && saved.isNotEmpty) {

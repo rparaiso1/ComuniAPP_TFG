@@ -11,22 +11,12 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override
   ThemeMode build() {
     _storage = ref.watch(localStorageProvider);
-    _loadSavedMode();
-    return ThemeMode.system;
-  }
-
-  void _loadSavedMode() {
     final saved = _storage.getSetting(_kThemeModeKey) as String?;
-    if (saved != null) {
-      switch (saved) {
-        case 'light':
-          state = ThemeMode.light;
-        case 'dark':
-          state = ThemeMode.dark;
-        default:
-          state = ThemeMode.system;
-      }
-    }
+    return switch (saved) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {

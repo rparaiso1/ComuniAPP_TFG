@@ -9,9 +9,6 @@ from app.models.zone import Zone
 from app.schemas.zone import ZoneCreate, ZoneUpdate
 from app.core.exceptions import ServiceError, NotFoundError, ConflictError
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-ZoneError = ServiceError
-
 
 class ZoneService:
 

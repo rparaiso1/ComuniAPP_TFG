@@ -22,6 +22,7 @@ import re
 
 from app.core.database import get_db
 from app.core.deps import get_current_admin_or_president, get_filtered_org_ids, get_active_org_id
+from app.core.config import settings
 from app.core.security_utils import InputSanitizer
 from app.models.user import User, UserRole
 from app.models.user_organization import UserOrganization
@@ -124,6 +125,16 @@ def change_user_role(
             )
 
     org_ids = get_filtered_org_ids(request, db, current_user)
+
+    # Verify target user belongs to caller's organizations
+    target_in_org = db.query(UserOrganization).filter(
+        UserOrganization.user_id == user_id,
+        UserOrganization.organization_id.in_(org_ids),
+        UserOrganization.is_active == True,
+    ).first()
+    if not target_in_org:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado en tus organizaciones")
+
     return AdminService(db).update_user_role(user_id, body.role, org_ids)
 
 
@@ -224,7 +235,7 @@ async def import_users(
       - rol / role (ADMIN, PRESIDENT, NEIGHBOR) — por defecto NEIGHBOR
       - telefono / phone (opcional)
       - vivienda / dwelling (opcional)
-      - password / contraseña (opcional, por defecto: ComuniApp2024)
+      - password / contraseña (opcional, por defecto: configurado en settings)
     """
     org_id = get_active_org_id(request, db, current_user)
 
@@ -254,16 +265,16 @@ async def import_users(
         role = (norm.get('rol', '') or norm.get('role', '')).strip().upper() or 'NEIGHBOR'
         phone = (norm.get('telefono', '') or norm.get('phone', '')).strip() or None
         dwelling = (norm.get('vivienda', '') or norm.get('dwelling', '')).strip() or None
-        password = (norm.get('password', '') or norm.get('contraseña', '') or norm.get('contrasena', '')).strip() or 'ComuniApp2024'
+        password = (norm.get('password', '') or norm.get('contraseña', '') or norm.get('contrasena', '')).strip() or settings.DEFAULT_IMPORT_PASSWORD
 
         # Validar política de contraseña si se especificó en el CSV
-        if password != 'ComuniApp2024':
+        if password != settings.DEFAULT_IMPORT_PASSWORD:
             from app.schemas.validators import validate_password_strength
             try:
                 validate_password_strength(password)
             except ValueError as ve:
                 errors.append(f"Fila {i} ({email}): contraseña inválida — {ve}, se asigna la contraseña por defecto")
-                password = 'ComuniApp2024'
+                password = settings.DEFAULT_IMPORT_PASSWORD
 
         if not email:
             errors.append(f"Fila {i}: email vacío, omitida")

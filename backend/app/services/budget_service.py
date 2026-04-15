@@ -21,9 +21,6 @@ from app.core.exceptions import ServiceError, NotFoundError
 MONTH_LABELS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
                 "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-BudgetError = ServiceError
-
 
 class BudgetService:
 

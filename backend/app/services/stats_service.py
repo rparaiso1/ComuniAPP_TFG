@@ -22,7 +22,7 @@ class StatsService:
     def dashboard(self, user_id: UUID, org_ids: List[UUID], user_role) -> dict:
         bookings_count = (
             self.db.query(func.count(Booking.id))
-            .filter(Booking.user_id == user_id)
+            .filter(Booking.user_id == user_id, Booking.organization_id.in_(org_ids))
             .scalar()
             or 0
         )

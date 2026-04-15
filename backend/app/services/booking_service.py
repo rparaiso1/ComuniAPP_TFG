@@ -1,7 +1,7 @@
 """
 Servicio de reservas — validación de reglas y operaciones CRUD.
 """
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, contains_eager
 from sqlalchemy import func
 from datetime import datetime, date, timedelta, timezone
 from uuid import UUID
@@ -11,9 +11,6 @@ from app.models.booking import Booking, BookingStatus
 from app.models.zone import Zone
 from app.schemas.booking import BookingCreate, BookingUpdate, BookingResponse
 from app.core.exceptions import ServiceError, NotFoundError, ForbiddenError, ConflictError
-
-# Alias mantenido por retrocompatibilidad con imports existentes
-BookingError = ServiceError
 
 
 class BookingService:
@@ -127,8 +124,9 @@ class BookingService:
         if user_id:
             query = query.filter(Booking.user_id == user_id)
         return (
-            query.options(joinedload(Booking.zone), joinedload(Booking.user))
+            query.options(joinedload(Booking.user))
             .join(Zone, Booking.zone_id == Zone.id)
+            .options(contains_eager(Booking.zone))
             .order_by(Zone.zone_type, Booking.start_time.asc()).offset(skip).limit(limit).all()
         )
 

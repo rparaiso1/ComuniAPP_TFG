@@ -19,9 +19,6 @@ from app.models.zone import Zone
 from app.models.notification import Notification
 from app.core.exceptions import ServiceError, NotFoundError
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-AdminError = ServiceError
-
 
 class AdminService:
     """Operaciones administrativas para el panel de control."""

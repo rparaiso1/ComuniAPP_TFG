@@ -10,9 +10,6 @@ from app.models.user import User
 from app.models.user_organization import UserOrganization
 from app.core.exceptions import ServiceError, NotFoundError, ForbiddenError, ConflictError
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-OrganizationError = ServiceError
-
 
 class OrganizationService:
 

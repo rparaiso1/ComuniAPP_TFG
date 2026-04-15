@@ -37,7 +37,7 @@ class Invitation(Base):
     status = Column(SQLEnum(InvitationStatus), default=InvitationStatus.PENDING)
     
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    expires_at = Column(DateTime, default=lambda: datetime.now(timezone.utc) + timedelta(days=30))
+    expires_at = Column(DateTime, default=lambda: datetime.now(timezone.utc) + timedelta(days=7))
     used_at = Column(DateTime, nullable=True)
 
     @staticmethod

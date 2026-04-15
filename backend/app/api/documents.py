@@ -3,6 +3,7 @@ Router de documentos — delega la lógica a DocumentService.
 Soporta subida real de archivos y workflow de aprobación.
 """
 import os
+import re
 import uuid as uuid_mod
 from typing import List, Optional
 from uuid import UUID
@@ -107,19 +108,25 @@ async def upload_document(
     # Save to disk
     unique_name = f"{uuid_mod.uuid4().hex}{ext}"
     file_path = os.path.join(UPLOAD_DIR, unique_name)
-    with open(file_path, "wb") as f:
-        f.write(content)
+    try:
+        with open(file_path, "wb") as f:
+            f.write(content)
 
-    # Build a URL for the file
-    file_url = f"/api/documents/files/{unique_name}"
+        # Build a URL for the file
+        file_url = f"/api/documents/files/{unique_name}"
 
-    doc_data = DocumentCreate(
-        title=title, file_url=file_url, file_type=file_type,
-        file_size=len(content), description=description,
-        category=category, requires_approval=requires_approval,
-    )
-    doc = DocumentService(db).create(doc_data, current_user.id, org_id)
-    return DocumentService.to_response(doc)
+        doc_data = DocumentCreate(
+            title=title, file_url=file_url, file_type=file_type,
+            file_size=len(content), description=description,
+            category=category, requires_approval=requires_approval,
+        )
+        doc = DocumentService(db).create(doc_data, current_user.id, org_id)
+        return DocumentService.to_response(doc)
+    except Exception:
+        # Cleanup orphan file on failure
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        raise
 
 
 @router.get("/files/{filename}")
@@ -142,26 +149,31 @@ def serve_file(
     if not user or not user.is_active:
         raise HTTPException(status_code=401, detail="Usuario no válido")
 
-    # Path traversal protection
+    # Path traversal protection — whitelist + realpath
     safe_filename = os.path.basename(filename)
+    if not re.match(r'^[a-zA-Z0-9._-]+$', safe_filename):
+        raise HTTPException(status_code=400, detail="Nombre de archivo inválido")
     file_path = os.path.join(UPLOAD_DIR, safe_filename)
-    if not os.path.abspath(file_path).startswith(os.path.abspath(UPLOAD_DIR)):
+    real_path = os.path.realpath(file_path)
+    real_upload_dir = os.path.realpath(UPLOAD_DIR)
+    if not real_path.startswith(real_upload_dir):
         raise HTTPException(status_code=400, detail="Nombre de archivo inválido")
 
-    # Verify org access BEFORE reading file
+    # Verify org access with single query (prevents info leak)
     from app.models.document import Document
     from app.models.user_organization import UserOrganization
-    doc = db.query(Document).filter(
-        Document.file_url.contains(safe_filename)
-    ).first()
+    doc = (
+        db.query(Document)
+        .join(
+            UserOrganization,
+            (UserOrganization.organization_id == Document.organization_id)
+            & (UserOrganization.user_id == user.id)
+            & (UserOrganization.is_active == True),
+        )
+        .filter(Document.file_url == f"/api/documents/files/{safe_filename}")
+        .first()
+    )
     if not doc:
-        raise HTTPException(status_code=404, detail="Documento no encontrado")
-    user_org = db.query(UserOrganization).filter(
-        UserOrganization.user_id == user.id,
-        UserOrganization.organization_id == doc.organization_id,
-        UserOrganization.is_active == True,
-    ).first()
-    if not user_org:
         raise HTTPException(status_code=403, detail="No tienes acceso a este documento")
 
     if not os.path.isfile(file_path):

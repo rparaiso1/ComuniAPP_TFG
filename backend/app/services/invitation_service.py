@@ -12,9 +12,6 @@ from app.models.invitation import Invitation, InvitationStatus
 from app.schemas.invitation import InvitationCreate, InvitationResponse, RegisterWithInvitationRequest
 from app.core.exceptions import ServiceError, NotFoundError, ForbiddenError, ConflictError
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-InvitationError = ServiceError
-
 
 class InvitationService:
 

@@ -145,6 +145,7 @@ class BookingController extends Notifier<BookingState> {
       state = state.copyWith(
         bookings: [newBooking, ...state.bookings],
         isCreating: false,
+        currentSkip: state.currentSkip + 1,
       );
     } catch (e) {
       state = state.copyWith(

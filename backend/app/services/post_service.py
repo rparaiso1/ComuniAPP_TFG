@@ -12,9 +12,6 @@ from app.models.post_like import PostLike
 from app.schemas.post import PostCreate, PostUpdate, PostResponse, PostCommentCreate, PostCommentResponse
 from app.core.exceptions import ServiceError, NotFoundError, ForbiddenError
 
-# Alias mantenido por retrocompatibilidad con imports existentes
-PostError = ServiceError
-
 
 class PostService:
 

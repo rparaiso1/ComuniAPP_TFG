@@ -169,11 +169,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     onChanged: (id) {
                                       if (id != null) {
                                         final org = communityState.organizations
-                                            .firstWhere((o) => o.id == id);
-                                        ref.read(communityControllerProvider.notifier)
-                                            .selectOrganization(org);
-                                        // Refrescar stats
-                                        ref.invalidate(dashboardStatsProvider);
+                                            .where((o) => o.id == id)
+                                            .firstOrNull;
+                                        if (org != null) {
+                                          ref.read(communityControllerProvider.notifier)
+                                              .selectOrganization(org);
+                                          // Refrescar stats
+                                          ref.invalidate(dashboardStatsProvider);
+                                        }
                                       }
                                     },
                                   ),
