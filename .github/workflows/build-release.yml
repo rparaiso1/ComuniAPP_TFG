@@ -1,0 +1,128 @@
+name: Build APK + IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Nombre del release (ej: v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  # ─────────────────────────────────────────────
+  # APK — Ubuntu (gratis, sin límite especial)
+  # ─────────────────────────────────────────────
+  build-apk:
+    name: Build APK (Android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build APK (release)
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: comuniapp-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+
+  # ─────────────────────────────────────────────
+  # IPA — macOS (usa minutos gratis de GitHub)
+  # ─────────────────────────────────────────────
+  build-ipa:
+    name: Build IPA (iOS, sin firma)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+
+      - name: Crear IPA manualmente (sin firma)
+        run: |
+          mkdir -p build/ios_output/Payload
+          cp -r build/ios/iphoneos/Runner.app build/ios_output/Payload/
+          cd build/ios_output
+          zip -r comuniapp-unsigned.ipa Payload
+          cd ../..
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: comuniapp-ipa
+          path: build/ios_output/comuniapp-unsigned.ipa
+          retention-days: 7
+
+  # ─────────────────────────────────────────────
+  # Release — Crea el release en GitHub con ambos
+  # ─────────────────────────────────────────────
+  create-release:
+    name: Crear GitHub Release
+    needs: [build-apk, build-ipa]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Descargar APK
+        uses: actions/download-artifact@v4
+        with:
+          name: comuniapp-apk
+          path: release-files
+
+      - name: Descargar IPA
+        uses: actions/download-artifact@v4
+        with:
+          name: comuniapp-ipa
+          path: release-files
+
+      - name: Crear Release con los archivos
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          name: "ComuniApp ${{ github.event.inputs.tag }}"
+          body: |
+            ## Descargas
+
+            | Plataforma | Archivo | Notas |
+            |---|---|---|
+            | Android | `app-release.apk` | Instalar en Android directamente |
+            | iOS | `comuniapp-unsigned.ipa` | Requiere Sideloadly + Apple ID gratuito |
+
+            ### Instalar la IPA en iPhone (Windows)
+            1. Descarga [Sideloadly](https://sideloadly.io)
+            2. Conecta el iPhone por USB
+            3. Arrastra el `.ipa` y usa tu Apple ID gratuito
+            4. En el iPhone: Ajustes → General → VPN y gestión del dispositivo → Confiar
+
+            > La IPA no está firmada oficialmente. Expira a los 7 días con Apple ID gratuito.
+          files: |
+            release-files/app-release.apk
+            release-files/comuniapp-unsigned.ipa
+          draft: false
+          prerelease: false
